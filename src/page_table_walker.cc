@@ -38,7 +38,7 @@ void PAGE_TABLE_WALKER::operate() {
             if (knob_cloudsuite) {
               if (MSHR.entry[index].instruction)
                 MSHR.entry[index].address =
-                    ((MSHR.entry[index].full_virtual_address >> LOG2_PAGE_SIZE)
+                    ((MSHR.entry[index].ip >> LOG2_PAGE_SIZE)
                      << 9) |
                     (256 + MSHR.entry[index].asid[0]);
               else {
@@ -131,7 +131,7 @@ void PAGE_TABLE_WALKER::operate() {
         if (knob_cloudsuite) {
           if (MSHR.entry[index].instruction)
             MSHR.entry[index].address =
-                ((MSHR.entry[index].full_virtual_address >> LOG2_PAGE_SIZE)
+                ((MSHR.entry[index].ip >> LOG2_PAGE_SIZE)
                  << 9) |
                 (256 + MSHR.entry[index].asid[0]);
           else
@@ -424,7 +424,7 @@ void PAGE_TABLE_WALKER::operate() {
       packet.full_physical_address = next_address;
       packet.translated = COMPLETED;
       packet.type = LOAD_TRANSLATION;
-      packet.instruction = 0;
+      packet.instruction = RQ.entry[index].instruction;
       packet.fill_l1d = 1;
       packet.fill_l1i = 0;
       int rq_index = ooo_cpu[cpu].L1D.add_rq(&packet);
@@ -461,7 +461,7 @@ void PAGE_TABLE_WALKER::operate() {
         packet.full_physical_address = next_address;
         packet.translated = COMPLETED;
         packet.type = LOAD_TRANSLATION;
-        packet.instruction = 0;
+        packet.instruction = RQ.entry[index].instruction;
         packet.fill_l1d = 1;
         packet.fill_l1i = 0;
         int rq_index = ooo_cpu[cpu].L1D.add_rq(&packet);
@@ -656,7 +656,7 @@ void PAGE_TABLE_WALKER::operate() {
       packet.full_physical_address = next_address;
       packet.translated = COMPLETED;
       MSHR.entry[index].type = LOAD_TRANSLATION;
-      packet.instruction = 0;
+      packet.instruction = PQ.entry[index].instruction;
       packet.fill_l1d = 1;
       packet.fill_l1i = 0;
       int rq_index = ooo_cpu[cpu].L1D.add_rq(&packet);
@@ -692,7 +692,7 @@ void PAGE_TABLE_WALKER::operate() {
         packet.full_physical_address = next_address;
         packet.translated = COMPLETED;
         packet.type = LOAD_TRANSLATION;
-        packet.instruction = 0;
+        packet.instruction = PQ.entry[index].instruction;
         packet.fill_l1d = 1;
         packet.fill_l1i = 0;
         int rq_index = ooo_cpu[cpu].L1D.add_rq(&packet);

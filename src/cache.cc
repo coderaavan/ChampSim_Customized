@@ -2818,7 +2818,10 @@ void CACHE::operate() {
 }
 
 uint32_t CACHE::get_set(uint64_t address) {
-  return (uint32_t)(address & ((1 << lg2(NUM_SET)) - 1));
+	 if (knob_cloudsuite && (cache_type == IS_DTLB || cache_type == IS_ITLB || cache_type == IS_STLB))
+                return (uint32_t) ((address >> 9) & ((1 << lg2(NUM_SET)) - 1));
+        else
+                return (uint32_t) (address & ((1 << lg2(NUM_SET)) - 1));
 }
 
 uint32_t CACHE::get_way(uint64_t address, uint32_t set) {
